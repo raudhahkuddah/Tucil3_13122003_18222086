@@ -410,14 +410,14 @@ public class GUI {
 
                 renderStep.run();
 
-                prevButton.addActionListener(_2 -> {
+                prevButton.addActionListener(_ -> {
                     if (stepIndex[0] > 0) {
                         stepIndex[0]--;
                         renderStep.run();
                     }
                 });
 
-                nextButton.addActionListener(_2 -> {
+                nextButton.addActionListener(_ -> {
                     if (stepIndex[0] < steps.size() - 1) {
                         stepIndex[0]++;
                         renderStep.run();
