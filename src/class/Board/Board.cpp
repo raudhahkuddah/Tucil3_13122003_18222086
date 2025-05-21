@@ -207,10 +207,10 @@ bool Board::IsSolved()
     return primary.pos.second + primary.length == this->M;
 }
 
-void Board::PrintBoard()
+void Board::PrintBoard(std::ostream &out) const
 {
-    // Generate board from pieces
     std::vector<std::vector<char>> board(this->N, std::vector<char>(this->M, '.'));
+
     for (const auto &[id, piece] : this->Pieces)
     {
         for (int i = 0; i < piece.length; i++)
@@ -221,11 +221,11 @@ void Board::PrintBoard()
                 board[piece.pos.first][piece.pos.second + i] = id;
         }
     }
+
     for (int i = 0; i < this->N; i++)
     {
         for (int j = 0; j < this->M; j++)
-            std::cout << board[i][j];
-        std::cout << '\n';
+            out << board[i][j];
+        out << '\n';
     }
-    std::cout << std::endl;
 }

@@ -18,8 +18,8 @@ public:
 
     std::vector<std::shared_ptr<Board>> GenerateSuccessors() const;
     std::string Serialize() const;
-    bool IsSolved();   // check if board is solved
-    void PrintBoard(); // print board (debugging)
+    bool IsSolved();                          // check if board is solved
+    void PrintBoard(std::ostream &out) const; // output board
 };
 
 #endif
