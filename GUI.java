@@ -1,12 +1,16 @@
-import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.*;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class GUI {
 
@@ -316,7 +320,7 @@ public class GUI {
 
                 process.waitFor();
 
-                // 6. Read solutions.txt
+                // 5. Read solutions.txt
                 File solutionsFile = new File(problemFile, "solutions.txt");
                 if (!solutionsFile.exists()) {
                     JOptionPane.showMessageDialog(null, "solutions.txt not found.");
@@ -347,6 +351,13 @@ public class GUI {
                     }
                 }
 
+                // 6. Save start.png and end.png
+                BufferedImage startImg = renderBoard(steps.get(0), w, h);
+                BufferedImage endImg = renderBoard(steps.get(steps.size() - 1), w, h);
+
+                ImageIO.write(startImg, "png", new File(problemFile, "start.png"));
+                ImageIO.write(endImg, "png", new File(problemFile, "end.png"));
+
                 // 7. Show metadata popup
                 JOptionPane.showMessageDialog(null,
                         "Runtime: " + runtime + " ms\n" +
@@ -364,7 +375,7 @@ public class GUI {
 
                 JButton prevButton = new JButton("Prev");
                 JButton nextButton = new JButton("Next");
-                JLabel stepLabel = new JLabel(); // Step display
+                JLabel stepLabel = new JLabel();
 
                 JPanel navPanel = new JPanel();
                 navPanel.add(prevButton);
@@ -399,14 +410,14 @@ public class GUI {
 
                 renderStep.run();
 
-                prevButton.addActionListener(_ -> {
+                prevButton.addActionListener(_2 -> {
                     if (stepIndex[0] > 0) {
                         stepIndex[0]--;
                         renderStep.run();
                     }
                 });
 
-                nextButton.addActionListener(_ -> {
+                nextButton.addActionListener(_2 -> {
                     if (stepIndex[0] < steps.size() - 1) {
                         stepIndex[0]++;
                         renderStep.run();
@@ -457,4 +468,31 @@ public class GUI {
     public static Color getColorForChar(char ch) {
         return fixedColorMap.getOrDefault(ch, Color.GRAY);
     }
+
+    private BufferedImage renderBoard(char[][] board, int w, int h) {
+        int cellSize = 40;
+        BufferedImage image = new BufferedImage(w * cellSize, h * cellSize, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                char c = board[i][j];
+                Color color = c == '.' ? Color.WHITE : getColorForChar(c);
+
+                g.setColor(color);
+                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                g.setColor(Color.BLACK);
+                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+
+                if (c != '.' && c != ' ') {
+                    g.setColor(Color.BLACK);
+                    g.drawString(Character.toString(c), j * cellSize + 15, i * cellSize + 25);
+                }
+            }
+        }
+
+        g.dispose();
+        return image;
+    }
+
 }
