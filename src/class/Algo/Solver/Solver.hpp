@@ -33,7 +33,9 @@ private:
     };
 
 public:
-    Solver(Board board, Heuristics H) : INITIAL(board), H(H) {};
+    int VISITED_NODES;
+
+    Solver(Board board, Heuristics H) : INITIAL(board), H(H), VISITED_NODES(0) {};
 
     std::vector<Board> SolveComplete();  // A* and UCS
     std::vector<Board> SolveGreedy();    // GBFS

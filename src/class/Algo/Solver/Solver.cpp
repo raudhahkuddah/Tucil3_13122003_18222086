@@ -10,8 +10,6 @@
 
 std::vector<Board> Solver::SolveComplete()
 {
-    int queued = 0;
-    int checked = 0;
     auto cmp = [](const std::shared_ptr<Node> &a, const std::shared_ptr<Node> &b)
     {
         return a->f > b->f; // Min-heap
@@ -36,7 +34,7 @@ std::vector<Board> Solver::SolveComplete()
         if (visited.count(stateKey))
             continue;
         visited.insert(stateKey);
-        checked++;
+        this->VISITED_NODES++;
 
         if (current->board.IsSolved())
         {
@@ -46,7 +44,6 @@ std::vector<Board> Solver::SolveComplete()
                 path.push_back(node->board);
             }
             std::reverse(path.begin(), path.end());
-            std::cout << "QUEUED " << queued << " VISITED " << checked << std::endl;
             return path;
         }
 
@@ -60,7 +57,6 @@ std::vector<Board> Solver::SolveComplete()
             int g = current->g + 1;
             int h = H.calculate(*succ);
             auto nextNode = std::make_shared<Node>(*succ, g, h, current);
-            queued++;
             openSet.push(nextNode);
         }
     }
@@ -96,6 +92,7 @@ std::vector<Board> Solver::SolveGreedy()
         if (visited.count(stateKey))
             continue;
         visited.insert(stateKey);
+        this->VISITED_NODES++;
 
         if (current->board.IsSolved())
         {
@@ -162,6 +159,7 @@ std::vector<Board> Solver::SolveLowMemory()
             return {current, threshold};
 
         pathVisited.insert(stateKey);
+        this->VISITED_NODES++;
 
         int minThreshold = INT_MAX;
         auto successors = current->board.GenerateSuccessors();
@@ -230,12 +228,10 @@ std::vector<Board> Solver::SolveLowMemory()
 
         if (result.nextThreshold == INT_MAX)
         {
-            std::cout << "No solution found.\n";
             break;
         }
 
         threshold = result.nextThreshold;
-        std::cout << "IDA* new threshold: " << threshold << std::endl;
     }
 
     return {}; // No solution found
