@@ -34,7 +34,7 @@ Board::Board(std::vector<std::string> INPUT, int N, int M)
     };
 
     // Case 1 : exit is at the top / bottom
-    if (INPUT.size() > N)
+    if (INPUT.size() > static_cast<std::size_t>(N))
     {
         // Case 1.1 : exit is at the top
         if (INPUT[0].find('K') != std::string::npos)
@@ -67,7 +67,7 @@ Board::Board(std::vector<std::string> INPUT, int N, int M)
     else
     {
         // Case 2.1 : exit is at the left
-        if (INPUT[0].size() > M)
+        if (INPUT[0].size() > static_cast<std::size_t>(M))
         {
             for (int i = 0; i < N; i++)
             {
